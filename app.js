@@ -78,9 +78,48 @@ class UI {
         console.log(cart);
 
         // save cart in localstorage
-        Storage.saveCart(cart)
+        Storage.saveCart(cart);
+        // add item to cart
+        this.setCartValues(cart);
+
+        //  add cart content
+        this.addCartItem(cartItem);
       });
     });
+  }
+  setCartValues(cart) {
+    let tempTotal = 0;
+    let itemsTotal = 0;
+    cart.map((item) => {
+      tempTotal += item.price * item.amount;
+      itemsTotal += item.amount;
+    });
+    cartTotal.innerText = parseFloat(tempTotal.toFixed(2));
+    cartItems.innerText = itemsTotal;
+  }
+  addCartItem(item) {
+    const div = document.createElement("div");
+    div.classList.add("cart-item");
+    div.innerHTML = `<!-- cart item -->
+            <!-- item image -->
+            <img src=${item.image} alt="product" />
+            <!-- item info -->
+            <div>
+              <h4>${item.title}</h4>
+              <h5>$${item.price}</h5>
+              <span class="remove-item" data-id=${item.id}>remove</span>
+            </div>
+            <!-- item functionality -->
+            <div>
+                <i class="fas fa-chevron-up" data-id=${item.id}></i>
+              <p class="item-amount">
+                ${item.amount}
+              </p>
+                <i class="fas fa-chevron-down" data-id=${item.id}></i>
+            </div>
+          <!-- cart item -->
+    `;
+    cartContent.appendChild(div);
   }
 }
 // local storage
@@ -93,8 +132,8 @@ class Storage {
     let products = JSON.parse(localStorage.getItem("products"));
     return products.find((product) => product.id === id);
   }
-  static saveCart(cart){
-    localStorage.setItem("cart",JSON.stringify(cart));
+  static saveCart(cart) {
+    localStorage.setItem("cart", JSON.stringify(cart));
   }
 }
 
